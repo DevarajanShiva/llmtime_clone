@@ -16,8 +16,8 @@ DEFAULT_UNK_TOKEN = "<unk>"
 loaded = {}
 
 def get_tokenizer():
-    # tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
-    tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+    tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
+    # tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
     special_tokens_dict = dict()
     if tokenizer.eos_token is None:
         special_tokens_dict["eos_token"] = DEFAULT_EOS_TOKEN
@@ -34,8 +34,8 @@ def get_model_and_tokenizer(model_name, cache_model=False):
         return loaded[model_name]
     tokenizer = get_tokenizer()
    
-    # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1",device_map="cpu")
-    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2",device_map="cpu")
+    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1",device_map="cpu")
+    # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2",device_map="cpu")
     model.eval()
     if cache_model:
         loaded[model_name] = model, tokenizer
@@ -114,8 +114,9 @@ def mistral_completion_fn(
 ):
     avg_tokens_per_step = len(tokenize_fn(input_str, model)['input_ids']) / len(input_str.split(settings.time_sep))
     max_tokens = int(avg_tokens_per_step*steps)
-    
+    print("1")
     model, tokenizer = get_model_and_tokenizer(model, cache_model=cache_model)
+    print("2")
 
     gen_strs = []
     for _ in tqdm(range(num_samples // batch_size)):
@@ -123,6 +124,7 @@ def mistral_completion_fn(
             [input_str], 
             return_tensors="pt",
         )
+        print("3")
 
         batch = {k: v.repeat(batch_size, 1) for k, v in batch.items()}
         batch = {k: v.cpu() for k, v in batch.items()}
@@ -132,6 +134,7 @@ def mistral_completion_fn(
         good_tokens = [tokenizer.convert_tokens_to_ids(token) for token in good_tokens_str]
         # good_tokens += [tokenizer.eos_token_id]
         bad_tokens = [i for i in range(len(tokenizer)) if i not in good_tokens]
+        print("4")
 
         generate_ids = model.generate(
             **batch,
@@ -147,4 +150,5 @@ def mistral_completion_fn(
             skip_special_tokens=True, 
             clean_up_tokenization_spaces=False
         )
+        print("5")
     return gen_strs
