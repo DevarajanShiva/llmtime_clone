@@ -7,7 +7,6 @@ from transformers import (
     AutoModelForCausalLM, 
     AutoTokenizer,
 )
-import transformers
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
 DEFAULT_EOS_TOKEN = "</s>"
@@ -35,14 +34,8 @@ def get_model_and_tokenizer(model_name, cache_model=False):
         return loaded[model_name]
     tokenizer = get_tokenizer()
     print("Loading Model")
-    bnb_config = transformers.BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.bfloat16
-    )
     # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", device_map="cuda") #, low_cpu_mem_usage=True
-    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", trust_remote_code=True, quantization_config=bnb_config, device_map='auto')
+    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", device_map='cpu', low_cpu_mem_usage=True)
     print("Loaded Model Successfully!")
     # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2",device_map="cpu")
     model.eval()
