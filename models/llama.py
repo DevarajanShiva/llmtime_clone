@@ -28,10 +28,12 @@ def get_tokenizer(model):
     chat = len(name_parts) > 1
     assert model_size in ["7b", "13b", "70b", "8b"]
 
-    tokenizer = LlamaTokenizer.from_pretrained(
-        llama2_model_string(model_size, chat),
-        use_fast=False,
-    )
+    # tokenizer = LlamaTokenizer.from_pretrained(
+    #     llama2_model_string(model_size, chat),
+    #     use_fast=False,
+    # )
+    model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     special_tokens_dict = dict()
     if tokenizer.eos_token is None:
