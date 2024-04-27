@@ -173,5 +173,7 @@ def mistral_completion_fn(
             skip_special_tokens=True, 
             clean_up_tokenization_spaces=False
         )
+        import ipdb
+        ipdb.set_trace()
         print("5")
     return gen_strs
