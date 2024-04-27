@@ -44,6 +44,7 @@ def get_model_and_tokenizer(model_name, cache_model=False):
     print("Loading Model")
     
     # tokenizer = get_tokenizer()
+    model_name = "/kaggle/input/mistral/pytorch/7b-v0.1-hf/1"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     model = AutoModelForCausalLM.from_pretrained(
