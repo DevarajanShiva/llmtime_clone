@@ -16,7 +16,8 @@ DEFAULT_UNK_TOKEN = "<unk>"
 loaded = {}
 
 def get_tokenizer():
-    tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
+    # tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
+    tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
     special_tokens_dict = dict()
     if tokenizer.eos_token is None:
         special_tokens_dict["eos_token"] = DEFAULT_EOS_TOKEN
