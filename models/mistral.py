@@ -5,9 +5,9 @@ from tqdm import tqdm
 import argparse
 from transformers import (
     AutoModelForCausalLM, 
-    AutoTokenizer, 
-    BitsAndBytesConfig,
+    AutoTokenizer,
 )
+import transformers
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
 DEFAULT_EOS_TOKEN = "</s>"
