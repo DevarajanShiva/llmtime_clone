@@ -51,14 +51,25 @@ def get_model_and_tokenizer(model_name, cache_model=False):
     chat = len(name_parts) > 1
 
     assert model_size in ["7b", "13b", "70b", "8b"]
+    print("Loading Model")
+    model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    tokenizer = get_tokenizer(model_name)
-
-    model = LlamaForCausalLM.from_pretrained(
-        llama2_model_string(model_size, chat),
-        device_map="auto",   
-        torch_dtype=torch.float16,
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        quantization_config = bnb_config,
+        torch_dtype = torch.bfloat16,
+        device_map = "auto",
+        trust_remote_code = True
     )
+
+    # tokenizer = get_tokenizer(model_name)
+
+    # model = LlamaForCausalLM.from_pretrained(
+    #     llama2_model_string(model_size, chat),
+    #     device_map="auto",   
+    #     torch_dtype=torch.float16,
+    # )
     model.eval()
     if cache_model:
         loaded[model_name] = model, tokenizer
