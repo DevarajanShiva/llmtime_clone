@@ -6,6 +6,8 @@ import argparse
 from transformers import (
     LlamaForCausalLM, 
     LlamaTokenizer, 
+    BitsAndBytesConfig,
+    AutoModelForCausalLM,
 )
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
@@ -44,14 +46,20 @@ def get_tokenizer(model):
     return tokenizer
 
 def get_model_and_tokenizer(model_name, cache_model=False):
+    model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
     if model_name in loaded:
         return loaded[model_name]
-    name_parts = model_name.split("-")
-    model_size = name_parts[0]
-    chat = len(name_parts) > 1
+    # name_parts = model_name.split("-")
+    # model_size = name_parts[0]
+    # chat = len(name_parts) > 1
 
-    assert model_size in ["7b", "13b", "70b", "8b"]
+    # assert model_size in ["7b", "13b", "70b", "8b"]
     print("Loading Model")
+    bnb_config = BitsAndBytesConfig(
+    load_in_4bit = True,
+    bnb_4bit_quanty_type = "nf4",
+    bnb_4bit_use_double_quanty = True
+    )
     model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
