@@ -33,7 +33,7 @@ def get_model_and_tokenizer(model_name, cache_model=False):
     if model_name in loaded:
         return loaded[model_name]
     tokenizer = get_tokenizer()
-   print("Loading Model")
+    print("Loading Model")
     model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", device_map="cuda") #, low_cpu_mem_usage=True
     print("Loaded Model Successfully!")
     # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2",device_map="cpu")
