@@ -34,7 +34,7 @@ def get_model_and_tokenizer(model_name, cache_model=False):
         return loaded[model_name]
     tokenizer = get_tokenizer()
    
-    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1",device_map="cpu")
+    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", device_map="cpu", low_cpu_mem_usage=True)
     # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2",device_map="cpu")
     model.eval()
     if cache_model:
