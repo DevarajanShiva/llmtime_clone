@@ -6,6 +6,7 @@ import argparse
 from transformers import (
     AutoModelForCausalLM, 
     AutoTokenizer, 
+    BitsAndBytesConfig,
 )
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
@@ -34,7 +35,7 @@ def get_model_and_tokenizer(model_name, cache_model=False):
         return loaded[model_name]
     tokenizer = get_tokenizer()
     print("Loading Model")
-    bnb_config = transformers.BitsAndBytesConfig(
+    bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,
     bnb_4bit_quant_type="nf4",
