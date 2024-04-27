@@ -4,10 +4,11 @@ from jax import grad,vmap
 from tqdm import tqdm
 import argparse
 from transformers import (
-    LlamaForCausalLM, 
-    LlamaTokenizer, 
+    # LlamaForCausalLM, 
+    # LlamaTokenizer, 
     BitsAndBytesConfig,
     AutoModelForCausalLM,
+    AutoTokenizer,
 )
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
