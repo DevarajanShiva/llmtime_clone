@@ -6,6 +6,7 @@ import argparse
 from transformers import (
     AutoModelForCausalLM, 
     AutoTokenizer,
+    BitsAndBytesConfig,
 )
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
@@ -32,10 +33,29 @@ def get_tokenizer():
 def get_model_and_tokenizer(model_name, cache_model=False):
     if model_name in loaded:
         return loaded[model_name]
-    tokenizer = get_tokenizer()
+
+    bnb_config = BitsAndBytesConfig(
+    load_in_4bit = True,
+    bnb_4bit_quanty_type = "nf4",
+    bnb_4bit_use_double_quanty = True
+    )
+
+    
     print("Loading Model")
+    
+    # tokenizer = get_tokenizer()
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        quantization_config = bnb_config,
+        torch_dtype = torch.bfloat16,
+        device_map = "auto",
+        trust_remote_code = True
+    )
     # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", device_map="cuda") #, low_cpu_mem_usage=True
-    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", device_map='cpu', low_cpu_mem_usage=True)
+    # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", device_map='cpu', low_cpu_mem_usage=True)
+    
     print("Loaded Model Successfully!")
     # model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2",device_map="cpu")
     model.eval()
