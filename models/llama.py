@@ -4,15 +4,15 @@ from jax import grad,vmap
 from tqdm import tqdm
 import argparse
 from transformers import (
-    # LlamaForCausalLM, 
-    # LlamaTokenizer, 
+    LlamaForCausalLM, 
+    LlamaTokenizer, 
     # BitsAndBytesConfig,
     # AutoModelForCausalLM,
-    AutoTokenizer,
+    # AutoTokenizer,
 )
-from ctransformers import (
-    AutoModelForCausalLM,
-)
+# from ctransformers import (
+#     AutoModelForCausalLM,
+# )
 
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
@@ -32,13 +32,13 @@ def get_tokenizer(model):
     chat = len(name_parts) > 1
     assert model_size in ["7b", "13b", "70b", "8b"]
 
-    # tokenizer = LlamaTokenizer.from_pretrained(
-    #     llama2_model_string(model_size, chat),
-    #     use_fast=False,
-    # )
-    model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
+    tokenizer = LlamaTokenizer.from_pretrained(
+        llama2_model_string(model_size, chat),
+        use_fast=False,
+    )
+    # model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
     # model_name = "TheBloke/Llama-2-13B-chat-GGUF"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    # tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     special_tokens_dict = dict()
     if tokenizer.eos_token is None:
@@ -54,15 +54,15 @@ def get_tokenizer(model):
     return tokenizer
 
 def get_model_and_tokenizer(model_name, cache_model=False):
-    model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
+    # model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
     # model_name = "TheBloke/Llama-2-13B-chat-GGUF"
     if model_name in loaded:
         return loaded[model_name]
-    # name_parts = model_name.split("-")
-    # model_size = name_parts[0]
-    # chat = len(name_parts) > 1
+    name_parts = model_name.split("-")
+    model_size = name_parts[0]
+    chat = len(name_parts) > 1
 
-    # assert model_size in ["7b", "13b", "70b", "8b"]
+    assert model_size in ["7b", "13b", "70b", "8b"]
     print("Loading Model")
     # bnb_config = BitsAndBytesConfig(
     # load_in_4bit = True,
@@ -70,10 +70,10 @@ def get_model_and_tokenizer(model_name, cache_model=False):
     # bnb_4bit_use_double_quanty = True
     # )
     # model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model_name = "TheBloke/Llama-2-13B-chat-GGUF"
-    model = AutoModelForCausalLM.from_pretrained(
-            model_name)
+    # tokenizer = AutoTokenizer.from_pretrained(model_name)
+    # model_name = "TheBloke/Llama-2-13B-chat-GGUF"
+    # model = AutoModelForCausalLM.from_pretrained(
+            # model_name)
 
     # model = AutoModelForCausalLM.from_pretrained(
     #     model_name,
@@ -83,13 +83,13 @@ def get_model_and_tokenizer(model_name, cache_model=False):
     #     trust_remote_code = True
     # )
 
-    # tokenizer = get_tokenizer(model_name)
+    tokenizer = get_tokenizer(model_name)
 
-    # model = LlamaForCausalLM.from_pretrained(
-    #     llama2_model_string(model_size, chat),
-    #     device_map="auto",   
-    #     torch_dtype=torch.float16,
-    # )
+    model = LlamaForCausalLM.from_pretrained(
+        llama2_model_string(model_size, chat),
+        device_map="auto",   
+        torch_dtype=torch.float16,
+    )
     model.eval()
     if cache_model:
         loaded[model_name] = model, tokenizer
