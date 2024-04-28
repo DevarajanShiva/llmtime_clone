@@ -6,10 +6,14 @@ import argparse
 from transformers import (
     # LlamaForCausalLM, 
     # LlamaTokenizer, 
-    BitsAndBytesConfig,
-    AutoModelForCausalLM,
+    # BitsAndBytesConfig,
+    # AutoModelForCausalLM,
     AutoTokenizer,
 )
+from ctransformers import (
+    AutoModelForCausalLM,
+)
+
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
 DEFAULT_EOS_TOKEN = "</s>"
@@ -33,6 +37,7 @@ def get_tokenizer(model):
     #     use_fast=False,
     # )
     model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
+    # model_name = "TheBloke/Llama-2-13B-chat-GGUF"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     special_tokens_dict = dict()
@@ -50,6 +55,7 @@ def get_tokenizer(model):
 
 def get_model_and_tokenizer(model_name, cache_model=False):
     model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
+    # model_name = "TheBloke/Llama-2-13B-chat-GGUF"
     if model_name in loaded:
         return loaded[model_name]
     # name_parts = model_name.split("-")
@@ -58,21 +64,24 @@ def get_model_and_tokenizer(model_name, cache_model=False):
 
     # assert model_size in ["7b", "13b", "70b", "8b"]
     print("Loading Model")
-    bnb_config = BitsAndBytesConfig(
-    load_in_4bit = True,
-    bnb_4bit_quanty_type = "nf4",
-    bnb_4bit_use_double_quanty = True
-    )
-    model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
+    # bnb_config = BitsAndBytesConfig(
+    # load_in_4bit = True,
+    # bnb_4bit_quanty_type = "nf4",
+    # bnb_4bit_use_double_quanty = True
+    # )
+    # model_name = "/kaggle/input/llama-2/pytorch/13b-chat-hf/1"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-
+    model_name = "TheBloke/Llama-2-13B-chat-GGUF"
     model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        quantization_config = bnb_config,
-        torch_dtype = torch.bfloat16,
-        device_map = "auto",
-        trust_remote_code = True
-    )
+            model_name)
+
+    # model = AutoModelForCausalLM.from_pretrained(
+    #     model_name,
+    #     quantization_config = bnb_config,
+    #     torch_dtype = torch.bfloat16,
+    #     device_map = "auto",
+    #     trust_remote_code = True
+    # )
 
     # tokenizer = get_tokenizer(model_name)
 
