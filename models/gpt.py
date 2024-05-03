@@ -134,4 +134,5 @@ def gpt_nll_fn(model, input_arr, target_arr, settings:SerializerSettings, transf
     # log p(x) = log p(token) - log bin_width = log p(token) + prec * log base
     transformed_nll = BPD - settings.prec*np.log(settings.base)
     avg_logdet_dydx = np.log(vmap(grad(transform))(target_arr)).mean()
+    print(f"NLL: {transformed_nll-avg_logdet_dydx}")
     return transformed_nll-avg_logdet_dydx
