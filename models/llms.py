@@ -62,6 +62,9 @@ completion_fns = {
 #   - float: Computed NLL per dimension for p(target_arr | input_arr).
 nll_fns = {
     'text-davinci-003': partial(gpt_nll_fn, model='text-davinci-003'),
+    'gpt-4': partial(gpt_nll_fn, model='gpt-4'),
+    'gpt-4-1106-preview':partial(gpt_nll_fn, model='gpt-4-1106-preview'),
+    'gpt-3.5-turbo-instruct': partial(gpt_nll_fn, model='gpt-3.5-turbo-instruct'),
     'mistral': partial(mistral_nll_fn, model='mistral'),
     'mistral-api-tiny': partial(mistral_api_nll_fn, model='mistral-tiny'),
     'mistral-api-small': partial(mistral_api_nll_fn, model='mistral-small'),
