@@ -107,8 +107,6 @@ def gpt_nll_fn(model, input_arr, target_arr, settings:SerializerSettings, transf
     assert input_str.endswith(settings.time_sep), f'Input string must end with {settings.time_sep}, got {input_str}'
     full_series = input_str + target_str
     response = openai.Completion.create(model=model, logprobs=5, prompt=full_series, max_tokens=0, echo=True, temperature=temp)
-    import ipdb
-    ipdb.set_trace()
     #print(response['choices'][0])
     logprobs = np.array(response['choices'][0].logprobs.token_logprobs, dtype=np.float32)
     tokens = np.array(response['choices'][0].logprobs.tokens)
